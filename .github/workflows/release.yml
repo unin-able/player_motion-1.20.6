@@ -1,5 +1,7 @@
 name: Release Packages
 
+# This action and script are currently not functional
+
 on: 
 #  push:
 #    branches:
