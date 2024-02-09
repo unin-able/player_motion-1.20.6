@@ -6,8 +6,8 @@ Player Motion is an explosion-based library that uses subtick timing to ensure t
 ### Launching a player where in a specific direction
 
 ```mcfunction
-scoreboard players set $strength delta.api.launch 10000
-function delta:api/launch_looking
+scoreboard players set $strength player_motion.api.launch 10000
+function player_motion:api/launch_looking
 ```
 - `$strength` represents motion in blocks/tick, scaled by 10000. A strength of 10000 will push the player at 1 block/tick
 - The facing direction in which the function is called is the direction the player will be launched
@@ -16,10 +16,10 @@ function delta:api/launch_looking
 ### Launching a player with xyz vector
 
 ```mcfunction
-scoreboard players set $x delta.api.launch 500
-scoreboard players set $y delta.api.launch 12000
-scoreboard players set $z delta.api.launch -3125
-function delta:api/launch_xyz
+scoreboard players set $x player_motion.api.launch 500
+scoreboard players set $y player_motion.api.launch 12000
+scoreboard players set $z player_motion.api.launch -3125
+function player_motion:api/launch_xyz
 ```
 - `$x`, `$y`, and `$z` are the strength in blocks/tick to launch the player in the x, y, and z directions
 - As before, only the player executing the command will be launched
@@ -29,10 +29,10 @@ function delta:api/launch_xyz
 ### Launching player via creeper directly
 If you'd like more fine-grain control, you can summon the creepers yourself and simply use delta for the subticking with the following format:
 ```mcfunction
-function delta:internal/subtick/begin_launch_context
-execute summon creeper <x y+1000 z> run function delta:internal/summon/initialize_creepers
-scoreboard players operation $temp delta.internal.id = @s delta.internal.id
-function delta:internal/subtick/end_launch_context
+function player_motion:internal/subtick/begin_launch_context
+execute summon creeper <x y+1000 z> run function player_motion:internal/summon/initialize_creepers
+scoreboard players operation $temp player_motion.internal.id = @s player_motion.internal.id
+function player_motion:internal/subtick/end_launch_context
 ```
 *Note: Creepers with an `ExplosionRadius` of -1 are recommended for more powerful pushes, and 1 for weaker ones. The direction of the push is determined by the angle from the creeper's feet to the player's eyes. You can place as many summon commands as you want, as long as they are between the launch context functions, which **must** be ran from a player. Make sure to summon the creeper 1000 blocks *above* where you want it to spawn.
 *Note #2: these instructions are probably out of date because of the no resource pack update, TODO*
