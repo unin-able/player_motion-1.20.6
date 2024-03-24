@@ -30,24 +30,13 @@
                   "source": "block_entity"
                 },
                 {
-                  "function": "minecraft:copy_nbt",
+                  "function": "minecraft:copy_components",
                   "source": "block_entity",
-                  "ops": [
-                    {
-                      "source": "Lock",
-                      "target": "BlockEntityTag.Lock",
-                      "op": "replace"
-                    },
-                    {
-                      "source": "LootTable",
-                      "target": "BlockEntityTag.LootTable",
-                      "op": "replace"
-                    },
-                    {
-                      "source": "LootTableSeed",
-                      "target": "BlockEntityTag.LootTableSeed",
-                      "op": "replace"
-                    }
+                  "components": [
+                    "minecraft:custom_name",
+                    "minecraft:container",
+                    "minecraft:lock",
+                    "minecraft:container_loot"
                   ]
                 },
                 {
