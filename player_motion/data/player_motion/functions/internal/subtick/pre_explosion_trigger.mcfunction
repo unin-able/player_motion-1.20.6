@@ -19,7 +19,10 @@ gamemode creative
 tp @s ~ ~1000 ~
 
 #Store blast protection values & temporarily remove it if present
-#Note: All of this can be removed in a controlled environment without blast protection
+tag @s remove player_motion.internal.blastprot
+execute unless items entity @s armor.* *[enchantments~[{enchantment:"minecraft:blast_protection"}]] run return 0
+tag @s add player_motion.internal.blastprot
+
 scoreboard players set @s player_motion.internal.blastprot.feet 0
 scoreboard players set @s player_motion.internal.blastprot.legs 0
 scoreboard players set @s player_motion.internal.blastprot.chest 0
