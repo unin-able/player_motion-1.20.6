@@ -27,7 +27,7 @@ function player_motion:api/launch_xyz
 *Note: These functions are *additive* and will apply motion in addition to existing motion rather than directly setting it to whatever input you send 
 
 ### Launching player via creeper directly
-If you'd like more fine-grain control, you can summon the creepers yourself and simply use delta for the subticking with the following format:
+If you'd like more fine-grain control, you can summon the creepers yourself and simply use the library for the subticking with the following format:
 ```mcfunction
 function player_motion:internal/subtick/begin_launch_context
 execute summon creeper <x y+1000 z> run function player_motion:internal/summon/initialize_creepers
@@ -40,7 +40,7 @@ function player_motion:internal/subtick/end_launch_context
 ## Limitations + Known Issues
 
 While this library is likely the closest we've gotten to perfect player motion manipulation, there are some limitations worth mentioning:
-- **MSPT Inconsistency**: Even though the motion applied is constant, the rate at which the server and client update may vary, and calling motion updates per tick may result in inconsistencies when these variations become too large. For consistent results, Delta should only be used for instantaneous bursts of motion, and continuous forces should instead rely on riding-based methods or levitation, depending on the context.
+- **MSPT Inconsistency**: Even though the motion applied is constant, the rate at which the server and client update may vary, and calling motion updates per tick may result in inconsistencies when these variations become too large. For consistent results, the library should only be used for instantaneous bursts of motion, and continuous forces should instead rely on riding-based methods or levitation, depending on the context.
 - **Spigot/Paper**: ~~This pack uses negative explosion radius creepers, which do not affect player motion on spigot or paper servers.~~ To make this pack work on paper, Nico314159 has made a fix here: https://github.com/Nico314159/Paper-Negative-Explosions
 
 If you know any possible solutions or would like to help fixing these problems, please let me know!
