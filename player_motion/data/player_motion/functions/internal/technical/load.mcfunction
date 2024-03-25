@@ -34,20 +34,20 @@ scoreboard objectives add player_motion.internal.id dummy
 scoreboard objectives add player_motion.internal.x dummy
 scoreboard objectives add player_motion.internal.y dummy
 scoreboard objectives add player_motion.internal.z dummy
+scoreboard objectives add player_motion.internal.blastprot.feet dummy
+scoreboard objectives add player_motion.internal.blastprot.legs dummy
+scoreboard objectives add player_motion.internal.blastprot.chest dummy
+scoreboard objectives add player_motion.internal.blastprot.head dummy
+
 
 #TEAMS
 team add player_motion.no_collide
     team modify player_motion.no_collide collisionRule never
 
-forceload remove 0 0
-forceload add 0 0
-
-#Place Shulker Box
-execute unless block 0 -64 0 light_blue_shulker_box run setblock 100001 -64 100000 light_blue_shulker_box
-execute unless block 0 -63 0 bedrock run setblock 100001 -63 100000 bedrock
-
 
 #MARKERS
+forceload remove 0 0
+forceload add 0 0
 kill d59ee2c6-58c8-4885-b9db-ecff066e4439
 summon marker ~ ~ ~ {UUID: [I;-711007546,1489520773,-1176769281,107889721],Tags:["global.ignore"]}
 

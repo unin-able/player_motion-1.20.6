@@ -15,8 +15,12 @@ gamemode survival @s[scores={player_motion.internal.gamemode=3}]
 #Revert difficulty if necessary
 execute if score $diff player_motion.internal.gamemode matches 0 run difficulty peaceful
 
-# Revert equipment
-execute in overworld run loot replace entity @s weapon.mainhand mine 0 -64 0 minecraft:debug_stick
+#Restore blast protection
+#Note: This can be removed in a controlled environment without blast protection
+execute if score @s player_motion.internal.blastprot.feet matches 1.. run item modify entity @s armor.feet player_motion:blastprot/restore/feet
+execute if score @s player_motion.internal.blastprot.legs matches 1.. run item modify entity @s armor.legs player_motion:blastprot/restore/legs
+execute if score @s player_motion.internal.blastprot.chest matches 1.. run item modify entity @s armor.chest player_motion:blastprot/restore/chest
+execute if score @s player_motion.internal.blastprot.head matches 1.. run item modify entity @s armor.head player_motion:blastprot/restore/head
 
 #Teleport self down
 tp @s ~ ~-1000 ~
