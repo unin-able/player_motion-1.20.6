@@ -1,0 +1,1 @@
+$execute store result score $power_out player_motion.internal.math run data get storage player_motion:sine arr[$(t)] $(y)

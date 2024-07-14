@@ -12,8 +12,18 @@
 scoreboard players set $function_called player_motion.internal.dummy 1
 tag @s add player_motion.launch
 
-execute as d59ee2c6-58c8-4885-b9db-ecff066e4439 in minecraft:overworld positioned 0.0 0.0 0.0 run function player_motion:internal/math/polar_to_xyz
+execute store result storage player_motion:math motion[0] double 0.0001 run scoreboard players get @s player_motion.internal.motion.x
+execute store result storage player_motion:math motion[1] double 0.0001 run scoreboard players get @s player_motion.internal.motion.y
+execute store result storage player_motion:math motion[2] double 0.0001 run scoreboard players get @s player_motion.internal.motion.z
 
-scoreboard players operation @s player_motion.internal.x += $out player_motion.internal.x
-scoreboard players operation @s player_motion.internal.y += $out player_motion.internal.y
-scoreboard players operation @s player_motion.internal.z += $out player_motion.internal.z
+execute store result storage player_motion:input strength float 0.0001 run scoreboard players get $strength player_motion.api.launch
+
+execute as d4bd74a7-4e82-4a07-8850-dfc4d89f9e2f positioned 0.0 0.0 0.0 run function player_motion:internal/math/looking_to_xyz with storage player_motion:input
+
+execute store result score $out player_motion.internal.motion.x run data get storage player_motion:math motion[0] 10000
+execute store result score $out player_motion.internal.motion.y run data get storage player_motion:math motion[1] 10000
+execute store result score $out player_motion.internal.motion.z run data get storage player_motion:math motion[2] 10000
+
+scoreboard players operation @s player_motion.internal.motion.x += $out player_motion.internal.motion.x
+scoreboard players operation @s player_motion.internal.motion.y += $out player_motion.internal.motion.y
+scoreboard players operation @s player_motion.internal.motion.z += $out player_motion.internal.motion.z

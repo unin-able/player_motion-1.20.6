@@ -1,0 +1,5 @@
+{
+    "[mcfunction]": {
+        "editor.inlayHints.enabled": "off"
+    }
+}

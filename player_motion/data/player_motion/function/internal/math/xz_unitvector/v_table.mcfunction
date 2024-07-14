@@ -1,0 +1,1 @@
+$execute store result score $xz_unitvector player_motion.internal.math run data get storage player_motion:sine arr[$(tan)] $(x)
