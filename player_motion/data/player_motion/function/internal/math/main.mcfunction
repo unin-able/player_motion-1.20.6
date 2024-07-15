@@ -1,6 +1,6 @@
 #> player_motion:internal/math/main
 function player_motion:internal/math/full_power
-execute as d4bd74a7-4e82-4a07-8850-dfc4d89f9e2f positioned 0.0 0.0 0.0 run function player_motion:internal/math/unitvector
+execute as d59ee2c6-58c8-4885-b9db-ecff066e4439 positioned 0.0 0.0 0.0 run function player_motion:internal/math/unitvector
 function player_motion:internal/math/n_full_exp
 function player_motion:internal/math/eyelevel
 function player_motion:internal/math/xz_unitvector
