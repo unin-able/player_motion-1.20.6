@@ -14,9 +14,12 @@
 scoreboard players set $function_called player_motion.internal.dummy 1
 tag @s add player_motion.launch
 
-execute store result storage player_motion:math motion[0] int 1 run scoreboard players get $x player_motion.api.launch
-execute store result storage player_motion:math motion[1] int 1 run scoreboard players get $y player_motion.api.launch
-execute store result storage player_motion:math motion[2] int 1 run scoreboard players get $z player_motion.api.launch
+execute store result storage player_motion:math motion[0] int 1 run \
+    scoreboard players get $x player_motion.api.launch
+execute store result storage player_motion:math motion[1] int 1 run \
+    scoreboard players get $y player_motion.api.launch
+execute store result storage player_motion:math motion[2] int 1 run \
+    scoreboard players get $z player_motion.api.launch
 
 scoreboard players operation $x player_motion.api.launch *= #constant.10000 player_motion.internal.math
 scoreboard players operation $y player_motion.api.launch *= #constant.10000 player_motion.internal.math
