@@ -1,1 +1,3 @@
-$execute store result score $power_out player_motion.internal.math run data get storage player_motion:sine arr[$(t)] $(y)
+#> player_motion:internal/math/full_power/sine
+$execute store result score $n_full_exp player_motion.internal.math run data get storage player_motion:trig arr[$(angle)] $(y)
+execute store result score $sub_power player_motion.internal.math run scoreboard players operation $n_full_exp player_motion.internal.math /= #constant.100 player_motion.internal.const
