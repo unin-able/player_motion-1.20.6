@@ -11,6 +11,12 @@
         execute if score $motion_z player_motion.internal.math matches ..-1 run \
             scoreboard players operation $motion_z player_motion.internal.math *= #constant.-1 player_motion.internal.const
 
+    # Sets angle before exchange
+        scoreboard players set $angle player_motion.internal.math 0
+
+        execute if score $motion_y player_motion.internal.math matches 0 run \
+            scoreboard players set $angle player_motion.internal.math 1
+
     # SuperSwordTW's method. Credit: https://github.com/SuperSwordTW/Distance-Trig-Calc-3d
         execute if score $motion_y player_motion.internal.math matches 0 run \
             scoreboard players operation $motion_y player_motion.internal.math >< $motion_x player_motion.internal.math
@@ -18,127 +24,87 @@
         execute if score $motion_y player_motion.internal.math matches 0 run \
             scoreboard players operation $motion_y player_motion.internal.math >< $motion_z player_motion.internal.math
 
-        execute store result storage player_motion:math magnitude.x int 0.1 run scoreboard players get $motion_x player_motion.internal.math
-        execute store result storage player_motion:math magnitude.y int 0.1 run scoreboard players get $motion_y player_motion.internal.math
-        execute store result storage player_motion:math magnitude.z int 0.1 run scoreboard players get $motion_z player_motion.internal.math
-
-        function player_motion:internal/math/full_power/trig with storage player_motion:math magnitude
-
-# unitvector
-    execute as d4bd74a7-4e82-4a07-8850-dfc4d89f9e2f positioned 0.0 0.0 0.0 run function player_motion:internal/math/unitvector
+        function player_motion:internal/math/full_power/trig
 
 # n_full_exp=floor(full_power/0.865)
     scoreboard players operation $n_full_exp player_motion.internal.math /= #constant.fpc player_motion.internal.const
 
+# Change back the angle
+    execute if score $angle player_motion.internal.math matches 1 run data modify storage player_motion:math magnitude.angle set value 0
+
 # eyelevel=y(eyes)-y(player)
     function player_motion:internal/math/eyelevel
-
-# xz_unitvector=sqrt(x_unitvector²+z_unitvector²)
-    # Normalize
-        execute if score $x_unitvector player_motion.internal.math matches ..-1 run \
-            scoreboard players operation $x_unitvector player_motion.internal.math *= #constant.-1 player_motion.internal.const
-
-        execute if score $z_unitvector player_motion.internal.math matches ..-1 run \
-            scoreboard players operation $z_unitvector player_motion.internal.math *= #constant.-1 player_motion.internal.const
-
-    # SuperSwordTW's method. Credit: https://github.com/SuperSwordTW/Distance-Trig-Calc-2d
-        execute if score $z_unitvector player_motion.internal.math matches 0 run \
-            scoreboard players operation $z_unitvector player_motion.internal.math >< $x_unitvector player_motion.internal.math
-
-        execute store result storage player_motion:math magnitude.x int 0.1 run \
-            scoreboard players get $x_unitvector player_motion.internal.math
-
-        execute store result storage player_motion:math magnitude.z int 0.1 run \
-            scoreboard players get $z_unitvector player_motion.internal.math
-
-        function player_motion:internal/math/xz_unitvector/trig with storage player_motion:math magnitude
-
 
 # sub power operations
     # sub_power=floor(full_power%0.8)
         scoreboard players operation $sub_power player_motion.internal.math %= #constant.fpc player_motion.internal.const
+
     # d12=1-sub_power
         scoreboard players set $d12 player_motion.internal.math 10000
-        execute store result score $d player_motion.internal.math run \
-            scoreboard players operation $d12 player_motion.internal.math -= $sub_power player_motion.internal.math
+        scoreboard players operation $d12 player_motion.internal.math -= $sub_power player_motion.internal.math
 
-    # d=-(y_unitvector*eyelevel+sqrt(|(d12*12)²-(xz_unitvector*eyelevel)²|))
-        # d=d12*12
-            scoreboard players operation $d player_motion.internal.math *= #constant.12 player_motion.internal.const
+    # Formula d=-(eyelevel*sinα + d12*12 * cos(arcsin(cosα*eyelevel/(d12*12))))
 
-        # temp=xz_unitvector*eyelevel
-            scoreboard players operation $temp player_motion.internal.math *= $eyelevel player_motion.internal.math
+    # d12 = d12*12
+    scoreboard players operation $d12 player_motion.internal.math *= #constant.12 player_motion.internal.const
 
-            scoreboard players operation $temp player_motion.internal.math /= #constant.100 player_motion.internal.const
+    # Obtain sinα and cosα
+    function player_motion:internal/math/trig/sine with storage player_motion:math magnitude
 
-        # d=d²=(d12*12)²
-            scoreboard players operation $d player_motion.internal.math /= #constant.10 player_motion.internal.const
+    # cosα *= eyelevel, record cosα for later use
+    scoreboard players operation $cosine player_motion.internal.math *= $eyelevel player_motion.internal.math
+        scoreboard players operation $cosine1 player_motion.internal.math = $cosine player_motion.internal.math
+    
+    # cosα /= d12 = cosα*eyelevel / (d12*12)
+    scoreboard players operation $cosine player_motion.internal.math *= #constant.10 player_motion.internal.const
 
-            scoreboard players operation $d player_motion.internal.math *= $d player_motion.internal.math
+    scoreboard players operation $cosine player_motion.internal.math /= $d12 player_motion.internal.math
 
-        # temp=temp²=(xz_unitvector*eyelevel)² --> el_times_sin_all_squared
-            scoreboard players operation $temp player_motion.internal.math *= $temp player_motion.internal.math
+    # obtain cos(arcsin(cosα*eyelevel/(d12*12))))
+    execute store result storage player_motion:math magnitude.quotient int 1 run scoreboard players get $cosine player_motion.internal.math
 
-            execute store result score $el_times_sin_all_squared player_motion.internal.math run \
-                scoreboard players operation $temp player_motion.internal.math /= #constant.100 player_motion.internal.const
+    function player_motion:internal/math/trig/arcsine with storage player_motion:math magnitude
 
-        # d=d-temp=(d12*12)²-(xz_unitvector*eyelevel)²
-            scoreboard players operation $d player_motion.internal.math -= $temp player_motion.internal.math
+    # cos(arcsin(cosα*eyelevel/(d12)))) *= d12
+    scoreboard players operation $d player_motion.internal.math *= $d12 player_motion.internal.math
 
-        # d=|d|=|(d12*12)²-(xz_unitvector*eyelevel)²|
-            execute if score $d player_motion.internal.math matches ..-1 run \
-                scoreboard players operation $d player_motion.internal.math *= #constant.-1 player_motion.internal.const
+    scoreboard players operation $d player_motion.internal.math /= #constant.1000 player_motion.internal.const
 
-        # d=sqrt(d)=sqrt(|(d12*12)²-(xz_unitvector*eyelevel)²|)
-            function player_motion:internal/math/d_sqrt
-            scoreboard players operation $d player_motion.internal.math = $out player_motion.internal.math.sqrt
+    # sinα *= eyelevel, record sine for later use
+    scoreboard players operation $sine player_motion.internal.math *= $eyelevel player_motion.internal.math
 
-            scoreboard players operation $d player_motion.internal.math *= #constant.10 player_motion.internal.const
+    scoreboard players operation $sine player_motion.internal.math /= #constant.10 player_motion.internal.const
 
-        # temp=y_unitvector*eyelevel --> el_times_cos
-            scoreboard players operation $temp player_motion.internal.math = $y_unitvector player_motion.internal.math
-            scoreboard players operation $temp player_motion.internal.math *= $eyelevel player_motion.internal.math
+        scoreboard players operation $sine1 player_motion.internal.math = $sine player_motion.internal.math
 
-            execute store result score $el_times_cos player_motion.internal.math run \
-                scoreboard players operation $temp player_motion.internal.math /= #constant.100 player_motion.internal.const
-
-        # d=-(d+temp=y_unitvec*eyelevel+sqrt(|(d12*12)²-(xz_unitvector*eyelevel)²|))
-            execute store result storage player_motion:math d double -0.0001 run \
-                scoreboard players operation $d player_motion.internal.math += $temp player_motion.internal.math
+    # d += sine
+    execute store result storage player_motion:math d double -0.0001 run \
+    scoreboard players operation $d player_motion.internal.math += $sine player_motion.internal.math
 
 
 # full power operations
-    # d12=1-fpc
-        scoreboard players set $d12 player_motion.internal.math 10000
+    # d12=1-fpc(0.8) = 0.2
+        scoreboard players set $d12 player_motion.internal.math 2000
 
-        execute store result score $d player_motion.internal.math run \
-            scoreboard players operation $d12 player_motion.internal.math -= #constant.fpc player_motion.internal.const
+    #full_d = -(eyelevel*sinα + (d12*12)*cos(arcsin(cosα*eyelevel/(d12*12))))
 
-    # full_d=-(y_unitvector*eyelevel+sqrt(|(d12*12)²-(xz_unitvector*eyelevel)²|))
-        # d=d12*12
-            scoreboard players operation $d player_motion.internal.math = $d12 player_motion.internal.math
+    # d12 = d12*12
+    scoreboard players operation $d12 player_motion.internal.math *= #constant.12 player_motion.internal.const
 
-            scoreboard players operation $d player_motion.internal.math *= #constant.12 player_motion.internal.const
+    # cosine1 = cosα*eyelevel, cosine1 /= d12
+    scoreboard players operation $cosine1 player_motion.internal.math *= #constant.10 player_motion.internal.const
 
-        # d=d²=(d12*12)²
-            scoreboard players operation $d player_motion.internal.math /= #constant.10 player_motion.internal.const
+    scoreboard players operation $cosine1 player_motion.internal.math /= $d12 player_motion.internal.math
 
-            scoreboard players operation $d player_motion.internal.math *= $d player_motion.internal.math
+    # Obtain cos(arcsin(cosine1))
+    execute store result storage player_motion:math magnitude.quotient int 1 run scoreboard players get $cosine1 player_motion.internal.math
 
-        # d=d-el_times_sin_all_squared=(d12*12)²-(xz_unitvector*eyelevel)²
-            scoreboard players operation $d player_motion.internal.math -= $el_times_sin_all_squared player_motion.internal.math
+    function player_motion:internal/math/trig/arcsine with storage player_motion:math magnitude
 
-        # d=|d|=|(d12*12)²-(xz_unitvector*eyelevel)²|
-            execute if score $d player_motion.internal.math matches ..-1 run \
-                scoreboard players operation $d player_motion.internal.math *= #constant.-1 player_motion.internal.const
+    # cos(arcsin(cosα*eyelevel/(d12)))) *= d12
+    scoreboard players operation $d player_motion.internal.math *= $d12 player_motion.internal.math
+    scoreboard players operation $d player_motion.internal.math /= #constant.1000 player_motion.internal.const
 
-        # d=sqrt(d)=sqrt(|(d12*12)²-(xz_unitvector*eyelevel)²|)
-            function player_motion:internal/math/d_sqrt
-
-            scoreboard players operation $d player_motion.internal.math = $out player_motion.internal.math.sqrt
-
-            scoreboard players operation $d player_motion.internal.math *= #constant.10 player_motion.internal.const
-
-        # d=-(d+el_times_cos=y_unitvec*eyelevel+sqrt(|(d12*12)²-(xz_unitvector*eyelevel)²|))
-            execute store result storage player_motion:math full_d double -0.0001 run \
-                scoreboard players operation $d player_motion.internal.math += $el_times_cos player_motion.internal.math
+    # d += sine1
+    execute store result storage player_motion:math full_d double -0.0001 run \
+    scoreboard players operation $d player_motion.internal.math += $sine1 player_motion.internal.math
