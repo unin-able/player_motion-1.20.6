@@ -5,7 +5,7 @@ Credit to [@BigPapi13](https://github.com/BigPapi13/Delta) for making the origin
 
 Credit to `nedraw` from the minecraft commands discord for the ender crystal methodology & implementation this is now based on.
 
-Credit to @SuperSwordTW for helping make significant math performance & stability improvements.
+Credit to [@SuperSwordTW](https://github.com/SuperSwordTW) for helping make significant math performance & stability improvements.
 
 ## How to use
 
