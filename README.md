@@ -1,9 +1,11 @@
 # Player Motion
 Player Motion is an explosion-based library that uses subtick timing to ensure that only one player is pushed by the blast without any side effects.
 
-Credit to [@BigPapi13](https://github.com/BigPapi13/Delta) for making the original library this is based on.
+Credit to [@BigPapi13](https://github.com/BigPapi13/Delta) for making the original library this is inspired by. This project aims to succeed it.
 
 Credit to `nedraw` from the minecraft commands discord for the ender crystal methodology & implementation this is now based on.
+
+Credit to @SuperSwordTW for helping make significant math performance & stability improvements.
 
 ## How to use
 
