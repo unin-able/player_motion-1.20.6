@@ -15,14 +15,14 @@ execute \
     scoreboard players operation $motion_z player_motion.internal.math = @s player_motion.internal.motion.z
 
 execute in minecraft:overworld run function player_motion:internal/math/main
-attribute @s knockback_resistance modifier add player_motion:disable_knockback_resistance -1 add_multiplied_total
+attribute @s minecraft:generic.knockback_resistance modifier add 6bcc5b97-efe5-4a08-877a-bab7b42a8cb6 "player_motion:disable_knockback_resistance" -1 add_multiplied_total
 function player_motion:internal/launch/gamemode/get
 gamemode creative
 tp ~ ~10000 ~
 execute at @s run function player_motion:internal/summon/main with storage player_motion:math
 tp ~ ~ ~
 function player_motion:internal/launch/gamemode/restore
-attribute @s knockback_resistance modifier remove player_motion:disable_knockback_resistance
+attribute @s minecraft:generic.knockback_resistance modifier remove 6bcc5b97-efe5-4a08-877a-bab7b42a8cb6
 
 scoreboard players set $function_called player_motion.internal.dummy 0
 tag @s remove player_motion.launch
